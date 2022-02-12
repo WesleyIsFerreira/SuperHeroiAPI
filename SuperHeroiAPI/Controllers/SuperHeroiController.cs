@@ -55,10 +55,26 @@ namespace SuperHeroiAPI.Controllers
 
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<SuperHeroi>>> Get()
+        [HttpGet("all/{page}")]
+
+        public async Task<ActionResult<List<SuperHeroi>>> GetAll(int page)
         {
-            return Ok(await this.context.superHerois.ToListAsync());
+            var pageResults = 3f;
+            var pageCout = Math.Ceiling(this.context.superHerois.Count() / pageResults);
+
+            var herois = await this.context.superHerois
+                .Skip((page - 1) * (int) pageResults)
+                .Take((int) pageResults)
+                .ToListAsync();
+
+            var response = new HeroiResponse
+            {
+                SuperHerois = herois,
+                Pages = (int)pageCout,
+                CurrentPage = page
+            };
+
+            return Ok(response);
         }
 
         [HttpPost]
