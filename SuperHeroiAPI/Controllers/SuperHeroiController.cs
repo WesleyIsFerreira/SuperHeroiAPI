@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SuperHeroiAPI.Validators;
 
 namespace SuperHeroiAPI.Controllers
 {
@@ -52,14 +53,13 @@ namespace SuperHeroiAPI.Controllers
             await this.context.SaveChangesAsync();
 
             return Ok(await this.context.superHerois.ToListAsync());
-
         }
 
         [HttpGet("all/{page}")]
 
         public async Task<ActionResult<List<SuperHeroi>>> GetAll(int page)
         {
-            var pageResults = 3f;
+            var pageResults = 10f;
             var pageCout = Math.Ceiling(this.context.superHerois.Count() / pageResults);
 
             var herois = await this.context.superHerois
@@ -80,6 +80,16 @@ namespace SuperHeroiAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<List<SuperHeroi>>> AddHero(SuperHeroi heroi)
         {
+
+            var validator = new HeroiValidator();
+
+            var result = validator.Validate(heroi);
+
+            if (result.IsValid == false)
+            {
+                return BadRequest(result.Errors);
+            }
+
             this.context.superHerois.Add(heroi);
             await this.context.SaveChangesAsync();
             return Ok(await this.context.superHerois.ToListAsync());
