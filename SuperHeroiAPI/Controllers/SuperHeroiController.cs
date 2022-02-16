@@ -19,7 +19,7 @@ namespace SuperHeroiAPI.Controllers
         {
             var heroi = await this.context.superHerois.FindAsync(id);
             if (heroi == null)
-                return BadRequest("Hereoi n encontrado");
+                return BadRequest("Herói não encontrado");
             
             return Ok(heroi);
         }
@@ -29,7 +29,7 @@ namespace SuperHeroiAPI.Controllers
         {
             var heroi = await this.context.superHerois.FindAsync(id);
             if (heroi == null)
-                return BadRequest("Hereoi n encontrado");
+                return BadRequest("Herói não encontrado");
 
             this.context.superHerois.Remove(heroi);
             await this.context.SaveChangesAsync();
@@ -42,7 +42,7 @@ namespace SuperHeroiAPI.Controllers
         {
             var heroi = await this.context.superHerois.FindAsync(request.Id);
             if (heroi == null)
-                return BadRequest("Hereoi n encontrado");
+                return BadRequest("Herói não encontrado");
 
             heroi.Name = request.Name;
             heroi.FirstName = request.FirstName;
